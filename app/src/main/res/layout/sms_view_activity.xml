@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/detail_background"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rlMenu"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#80FF0000" >
+
+        <TextView
+            android:id="@+id/tvBack"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bg_item_red_back"
+            android:drawableLeft="@drawable/ic_arrow_left"
+            android:gravity="center"
+            android:paddingRight="7dp"
+            android:text="Thoát"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="Lời chúc"
+            android:textColor="@android:color/white"
+            android:textSize="19dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
