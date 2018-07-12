@@ -13,76 +13,47 @@ import android.widget.TextView;
 
 public class SplashActivity extends Activity {
 
-	private Animation animation;
-	private ImageView logo;
-	private TextView title_txt;
-	private TextView title2_txt;
+    private ImageView logo;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_splash);
-		getActionBar().hide();
-		logo = (ImageView) findViewById(R.id.logo_img);
-		title_txt = (TextView) findViewById(R.id.track_txt);
-		title2_txt = (TextView) findViewById(R.id.pro_txt);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        if (getActionBar() != null) {
+            getActionBar().hide();
+        }
 
-		if (savedInstanceState == null) {
-			flyIn();
-		}
+        logo = findViewById(R.id.logo_img);
 
-		new Handler().postDelayed(new Runnable() {
+        if (savedInstanceState == null) {
+            flyIn();
+        }
 
-			@Override
-			public void run() {
-				endSplash();
-			}
-		}, 3000);
-	}
+        new Handler().postDelayed(new Runnable() {
 
-	private void flyIn() {
-		animation = AnimationUtils.loadAnimation(this, R.anim.logo_animation);
-		logo.startAnimation(animation);
+            @Override
+            public void run() {
+                endSplash();
+            }
+        }, 3000);
+    }
 
-		animation = AnimationUtils.loadAnimation(this, R.anim.app_name_animation);
-		title_txt.startAnimation(animation);
+    private void flyIn() {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.logo_animation);
+        logo.startAnimation(animation);
+    }
 
-		animation = AnimationUtils.loadAnimation(this, R.anim.pro_animation);
-		title2_txt.startAnimation(animation);
-	}
+    private void endSplash() {
 
-	private void endSplash() {
-		animation = AnimationUtils.loadAnimation(this, R.anim.logo_animation_back);
-		logo.startAnimation(animation);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
 
-		animation = AnimationUtils.loadAnimation(this, R.anim.app_name_animation_back);
-		title_txt.startAnimation(animation);
+    }
 
-		animation = AnimationUtils.loadAnimation(this, R.anim.pro_animation_back);
-		title2_txt.startAnimation(animation);
-
-		animation.setAnimationListener(new AnimationListener() {
-			@Override
-			public void onAnimationEnd(Animation arg0) {
-				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-				startActivity(intent);
-				finish();
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation arg0) {
-			}
-
-			@Override
-			public void onAnimationStart(Animation arg0) {
-			}
-		});
-
-	}
-
-	@Override
-	public void onBackPressed() {
-		// Do nothing
-	}
+    @Override
+    public void onBackPressed() {
+        // Do nothing
+    }
 
 }
