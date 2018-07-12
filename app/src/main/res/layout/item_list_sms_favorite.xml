@@ -3,17 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="10dp"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvSMSNameFavorite"
         android:layout_width="match_parent"
-        android:background="@drawable/bg_item_red"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp"
-       	android:lines="4"
-       	android:textColor="#fff"
-        android:layout_height="wrap_content" />
+        android:lineSpacingExtra="2dp"
+        android:padding="10dp" />
+
+    <include layout="@layout/layout_item_divider" />
 
 </LinearLayout>

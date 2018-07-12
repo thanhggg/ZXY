@@ -26,6 +26,6 @@
         android:fromAlpha="0"
         android:toAlpha="1"
         android:repeatMode="reverse"
-        android:repeatCount="infinite"/>
+        android:repeatCount="2"/>
 
 </set>

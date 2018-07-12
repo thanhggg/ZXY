@@ -48,20 +48,14 @@ public class FavoriteAdapter extends BaseAdapter {
 		
 		if (convertView == null) {
 			convertView = inflater.inflate(resouce, null);
-			mHolder.tvSMS = (TextView) convertView.findViewById(R.id.tvSMSNameFavorite);
+			mHolder.tvSMS = convertView.findViewById(R.id.tvSMSNameFavorite);
 			convertView.setTag(mHolder);
 		}else{
 			mHolder = (ViewHolder) convertView.getTag();
 		}
 		
 		if(sms != null){
-			if(position % 2 == 0){
-				mHolder.tvSMS.setBackgroundResource(R.drawable.bg_item_red);
-				mHolder.tvSMS.setTextColor(Color.WHITE);
-			}else{
-				mHolder.tvSMS.setBackgroundResource(R.drawable.bg_item_white);
-				mHolder.tvSMS.setTextColor(Color.BLACK);
-			}
+			mHolder.tvSMS.setTextColor(context.getResources().getColor(R.color.red));
 			mHolder.tvSMS.setText(sms.getContent());
 		}
 		

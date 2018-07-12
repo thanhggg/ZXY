@@ -28,9 +28,9 @@ public class FavoritesFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_favotite, container, false);
 		
 		mContext = rootView.getContext();
-		lvFavorite = (ListView) rootView.findViewById(R.id.lvFavorite);
+		lvFavorite = rootView.findViewById(R.id.lvFavorite);
 		
-		lstSmsObjectsFavorite = new ArrayList<SMSObject>();
+		lstSmsObjectsFavorite = new ArrayList<>();
 		
 		mReadDB = new ReadDB(mContext);
 		try {

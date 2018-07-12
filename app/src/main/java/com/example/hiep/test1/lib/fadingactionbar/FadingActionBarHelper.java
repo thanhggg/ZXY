@@ -117,7 +117,7 @@ public class FadingActionBarHelper {
         //
         // See if we are in a ListView or ScrollView scenario
 
-        ListView listView = (ListView) mContentView.findViewById(android.R.id.list);
+        ListView listView = mContentView.findViewById(android.R.id.list);
         View root;
         if (listView != null) {
             root = createListView(listView);
@@ -179,12 +179,12 @@ public class FadingActionBarHelper {
     private View createScrollView() {
         mScrollView = (ViewGroup) mInflater.inflate(R.layout.fab__scrollview_container, null);
 
-        NotifyingScrollView scrollView = (NotifyingScrollView) mScrollView.findViewById(R.id.fab__scroll_view);
+        NotifyingScrollView scrollView = mScrollView.findViewById(R.id.fab__scroll_view);
         scrollView.setOnScrollChangedListener(mOnScrollChangedListener);
 
-        mContentContainer = (ViewGroup) mScrollView.findViewById(R.id.fab__container);
+        mContentContainer = mScrollView.findViewById(R.id.fab__container);
         mContentContainer.addView(mContentView);
-        mHeaderContainer = (FrameLayout) mScrollView.findViewById(R.id.fab__header_container);
+        mHeaderContainer = mScrollView.findViewById(R.id.fab__header_container);
         initializeGradient(mHeaderContainer);
         mHeaderContainer.addView(mHeaderView, 0);
         mMarginView = mContentContainer.findViewById(R.id.fab__content_top_margin);
@@ -202,7 +202,7 @@ public class FadingActionBarHelper {
         mContentContainer = (ViewGroup) mInflater.inflate(R.layout.fab__listview_container, null);
         mContentContainer.addView(mContentView);
 
-        mHeaderContainer = (FrameLayout) mContentContainer.findViewById(R.id.fab__header_container);
+        mHeaderContainer = mContentContainer.findViewById(R.id.fab__header_container);
         initializeGradient(mHeaderContainer);
         mHeaderContainer.addView(mHeaderView, 0);
 

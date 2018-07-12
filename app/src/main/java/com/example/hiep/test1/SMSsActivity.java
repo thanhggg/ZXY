@@ -16,91 +16,88 @@ import java.util.ArrayList;
 
 
 public class SMSsActivity extends ActivityBase {
-	private ReadDB mReadDB;
-	private ViewPager mPager;
-	private SMSViewpagerAdapter mPagerAdapter;
-	private ArrayList<SMSObject> lstSMS = new ArrayList<SMSObject>();
-	private TextView tvBack;
+    private ViewPager mPager;
+    private ArrayList<SMSObject> lstSMS = new ArrayList<SMSObject>();
+    private TextView tvBack;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.sms_view_activity);
-		getActionBar().hide();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		Intent mIntent = getIntent();
-		int position = 0;
-		int key = 0;
-		int id_category = 0;
-		mPager = (ViewPager) findViewById(R.id.view_pager);
-		tvBack = (TextView) findViewById(R.id.tvBack);
+        setContentView(R.layout.sms_view_activity);
+        getActionBar().hide();
 
-		if (mIntent != null) {
-			position = Integer.valueOf(mIntent.getIntExtra("sms_id",0));
-			id_category = Integer
-					.valueOf(mIntent.getIntExtra("id_category",0));
-			key = Integer.valueOf(mIntent.getIntExtra("key",0));
-		}
+        Intent mIntent = getIntent();
+        int position = 0;
+        int key = 0;
+        int id_category = 0;
+        mPager = findViewById(R.id.view_pager);
+        tvBack = findViewById(R.id.tvBack);
 
-		tvBack.setOnClickListener(new OnClickListener() {
+        if (mIntent != null) {
+            position = mIntent.getIntExtra("sms_id", 0);
+            id_category = mIntent.getIntExtra("id_category", 0);
+            key = mIntent.getIntExtra("key", 0);
+        }
 
-			@Override
-			public void onClick(View v) {
-				onBackPressed();
-			}
-		});
-		getData(position, id_category, key);
+        tvBack.setOnClickListener(new OnClickListener() {
 
-	}
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        getData(position, id_category, key);
 
-	public void getData(int current, int id_category,int key) {
-		mReadDB = new ReadDB(SMSsActivity.this);
-		try {
-			mReadDB.createDatabase();
-			mReadDB.openDatabase();
-		} catch (Exception e) {
+    }
 
-		}
-		if (lstSMS != null)
-			lstSMS.clear();
+    public void getData(int current, int id_category, int key) {
+        ReadDB mReadDB = new ReadDB(SMSsActivity.this);
+        try {
+            mReadDB.createDatabase();
+            mReadDB.openDatabase();
+        } catch (Exception e) {
 
-		if (key == 2) {
-			lstSMS = mReadDB.getlistSMSObjectPopulate();
-		} else if(key==1) {
-			lstSMS = mReadDB.getlistSMSObject(id_category);
-		}
-		else{
-		}
+        }
+        if (lstSMS != null)
+            lstSMS.clear();
 
-		mPagerAdapter = new SMSViewpagerAdapter(SMSsActivity.this, lstSMS);
-		mPager.setAdapter(mPagerAdapter);
-		mPager.setCurrentItem(current);
+        if (key == 2) {
+            lstSMS = mReadDB.getlistSMSObjectPopulate();
+        } else if (key == 1) {
+            lstSMS = mReadDB.getlistSMSObject(id_category);
+        } else {
+        }
 
-		mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        SMSViewpagerAdapter mPagerAdapter = new SMSViewpagerAdapter(SMSsActivity.this, lstSMS);
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(current);
 
-			@Override
-			public void onPageSelected(int position) {
-			}
+        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
+            @Override
+            public void onPageSelected(int position) {
+            }
 
-			}
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+                // TODO Auto-generated method stub
 
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
+            }
 
-			}
-		});
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+                // TODO Auto-generated method stub
 
-		mReadDB.closeDatabase();
-	}
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-	}
+            }
+        });
+
+        mReadDB.closeDatabase();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // TODO Auto-generated method stub
+        super.onBackPressed();
+    }
 }

@@ -2,10 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_category_detail"
+    android:background="@drawable/list_sms_background"
     android:orientation="vertical" >
 
     <ListView
+        android:layout_marginTop="20dp"
         android:id="@+id/lvFavorite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
