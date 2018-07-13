@@ -14,7 +14,8 @@
         android:theme="@style/Theme.Themchuctet" >
         <activity
             android:name=".SplashActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,16 +24,19 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".GreetingsActivity"
             android:label="@string/title_activity_greetings"
-            android:theme="@style/AppTheme.Light.TranslucentActionBar" >
+            android:theme="@style/AppTheme.Light.TranslucentActionBar"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SMSsActivity"
-            android:label="@string/title_activity_greetings" >
+            android:label="@string/title_activity_greetings"
+            android:screenOrientation="portrait">
         </activity>
 
     </application>

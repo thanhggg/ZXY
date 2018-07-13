@@ -284,7 +284,7 @@ public class FadingActionBarHelper {
     }
 
     private void updateHeaderHeight(int headerHeight) {
-        LayoutParams params = (LayoutParams) mMarginView.getLayoutParams();
+        LayoutParams params = mMarginView.getLayoutParams();
         params.height = headerHeight;
         mMarginView.setLayoutParams(params);
         if (mListViewBackgroundView != null) {
