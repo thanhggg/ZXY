@@ -1,6 +1,9 @@
 package com.example.hiep.test1;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -87,25 +90,48 @@ public class GreetingsActivity extends ActivityBase {
         PopularSMSAdapter adapter = new PopularSMSAdapter(GreetingsActivity.this, R.layout.item_list_sms, mLisSms);
         listGreet.setAdapter(adapter);
 
-        listGreet.setOnItemClickListener(new OnItemClickListener() {
-
+        adapter.setListener(new PopularSMSAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                    long arg3) {
-                // TODO Auto-generated method stub
-                Intent mIntent = new Intent(GreetingsActivity.this, SMSsActivity.class);
-                mIntent.putExtra("sms_id", arg2);
-                mIntent.putExtra("id_category", id_category);
-                mIntent.putExtra("key", 1);
-                startActivity(mIntent);
+            public void onItemClicked(int pos, final String msg) {
+                AlertDialog actionDialog = new AlertDialog.Builder(GreetingsActivity.this)
+                        .setTitle("Lựa chọn hành động")
+                        .setPositiveButton("Gửi SMS", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                createSendSmsIntent(msg);
+                            }
+                        }).setNegativeButton("Share Facebook", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                createShareIntent(msg);
+                            }
+                        }).create();
+                actionDialog.show();
             }
         });
+
     }
 
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
         super.onBackPressed();
+    }
+
+    void createShareIntent(String sms) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, sms);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, "share"));
+    }
+
+    void createSendSmsIntent(String sms) {
+
+        Uri uri = Uri.parse("smsto:");
+        Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+        it.putExtra("sms_body", sms);
+        startActivity(it);
     }
 
 }

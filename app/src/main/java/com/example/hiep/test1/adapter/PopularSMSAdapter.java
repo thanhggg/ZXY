@@ -17,15 +17,21 @@ import java.util.ArrayList;
 
 public class PopularSMSAdapter extends BaseAdapter {
     private int resouce;
-    Context context = null;
+    private Context context = null;
     private LayoutInflater inflater;
-    ArrayList<SMSObject> arr = null;
+    private ArrayList<SMSObject> arr = null;
+    private OnItemClickListener mListener;
 
     public PopularSMSAdapter(Context context, int resouce, ArrayList<SMSObject> list) {
         this.context = context;
         this.resouce = resouce;
         inflater = LayoutInflater.from(context);
         this.arr = list;
+    }
+
+    public interface OnItemClickListener {
+
+        void onItemClicked(int pos, String msg);
     }
 
     @Override
@@ -43,9 +49,9 @@ public class PopularSMSAdapter extends BaseAdapter {
         return 0;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder mHolder = new ViewHolder();
-        SMSObject sms = arr.get(position);
+        final SMSObject sms = arr.get(position);
 
         if (convertView == null) {
             convertView = inflater.inflate(resouce, null);
@@ -58,13 +64,25 @@ public class PopularSMSAdapter extends BaseAdapter {
         if (sms != null) {
             mHolder.tvSMS.setTextColor(context.getResources().getColor(R.color.red));
             mHolder.tvSMS.setText(sms.getContent());
-        }
 
+            mHolder.tvSMS.getRootView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onItemClicked(position, sms.getContent());
+                    }
+                }
+            });
+        }
 
         return convertView;
     }
 
     private class ViewHolder {
         TextView tvSMS;
+    }
+
+    public void setListener(OnItemClickListener listener) {
+        mListener = listener;
     }
 }
