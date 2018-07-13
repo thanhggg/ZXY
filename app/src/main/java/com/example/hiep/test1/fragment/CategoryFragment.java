@@ -36,7 +36,7 @@ public class CategoryFragment extends Fragment {
         try {
             mReadDB.createDatabase();
             mReadDB.openDatabase();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
 
@@ -51,4 +51,5 @@ public class CategoryFragment extends Fragment {
         mReadDB.closeDatabase();
         return rootView;
     }
+
 }

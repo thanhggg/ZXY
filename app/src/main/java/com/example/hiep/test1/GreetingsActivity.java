@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.example.hiep.test1.adapter.PopularSMSAdapter;
 import com.example.hiep.test1.db.ReadDB;
 import com.example.hiep.test1.db.SMSObject;
+import com.example.hiep.test1.function.UtilFuntion;
 import com.example.hiep.test1.lib.fadingactionbar.FadingActionBarHelper;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class GreetingsActivity extends ActivityBase {
 //		setContentView(R.layout.activity_greetings);
 
         FadingActionBarHelper helper = new FadingActionBarHelper()
+                .rootViewBackground(UtilFuntion.getRandomBackground())
                 .actionBarBackground(R.drawable.actionbar_background)
                 .headerLayout(R.layout.header)
                 .contentLayout(R.layout.activity_greetings);

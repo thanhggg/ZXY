@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -56,6 +57,12 @@ public class FadingActionBarHelper {
     private boolean mFirstGlobalLayoutPerformed;
     private View mMarginView;
     private View mListViewBackgroundView;
+    private int mRootViewBackgroundResId;
+
+    public FadingActionBarHelper rootViewBackground(int drawableResId) {
+        mRootViewBackgroundResId = drawableResId;
+        return this;
+    }
 
 
     public FadingActionBarHelper actionBarBackground(int drawableResId) {
@@ -102,7 +109,7 @@ public class FadingActionBarHelper {
         return createView(LayoutInflater.from(context));
     }
 
-    public View createView(LayoutInflater inflater) {
+    private View createView(LayoutInflater inflater) {
         //
         // Prepare everything
 
@@ -125,10 +132,10 @@ public class FadingActionBarHelper {
             root = createScrollView();
         }
 
-        // Use measured height here as an estimate of the header height, later on after the layout is complete 
+        // Use measured height here as an estimate of the header height, later on after the layout is complete
         // we'll use the actual height
         @SuppressLint("Range") int widthMeasureSpec = MeasureSpec.makeMeasureSpec(LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY);
-        @SuppressLint("Range")int heightMeasureSpec = MeasureSpec.makeMeasureSpec(LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY);
+        @SuppressLint("Range") int heightMeasureSpec = MeasureSpec.makeMeasureSpec(LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY);
         mHeaderView.measure(widthMeasureSpec, heightMeasureSpec);
         updateHeaderHeight(mHeaderView.getMeasuredHeight());
 
@@ -157,27 +164,28 @@ public class FadingActionBarHelper {
         mActionBarBackgroundDrawable.setAlpha(0);
     }
 
-    protected ActionBar getActionBar(Activity activity) {
+    private ActionBar getActionBar(Activity activity) {
         return activity.getActionBar();
     }
 
     private Drawable.Callback mDrawableCallback = new Drawable.Callback() {
         @Override
-        public void invalidateDrawable(Drawable who) {
+        public void invalidateDrawable(@NonNull Drawable who) {
             mActionBar.setBackgroundDrawable(who);
         }
 
         @Override
-        public void scheduleDrawable(Drawable who, Runnable what, long when) {
+        public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
         }
 
         @Override
-        public void unscheduleDrawable(Drawable who, Runnable what) {
+        public void unscheduleDrawable(Drawable who, @NonNull Runnable what) {
         }
     };
 
     private View createScrollView() {
         mScrollView = (ViewGroup) mInflater.inflate(R.layout.fab__scrollview_container, null);
+
 
         NotifyingScrollView scrollView = mScrollView.findViewById(R.id.fab__scroll_view);
         scrollView.setOnScrollChangedListener(mOnScrollChangedListener);
@@ -188,7 +196,7 @@ public class FadingActionBarHelper {
         initializeGradient(mHeaderContainer);
         mHeaderContainer.addView(mHeaderView, 0);
         mMarginView = mContentContainer.findViewById(R.id.fab__content_top_margin);
-
+        mContentContainer.setBackgroundResource(mRootViewBackgroundResId);
         return mScrollView;
     }
 
@@ -215,6 +223,7 @@ public class FadingActionBarHelper {
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mListViewBackgroundView.getLayoutParams();
         params.height = Utils.getDisplayHeight(listView.getContext());
         mListViewBackgroundView.setLayoutParams(params);
+        mListViewBackgroundView.setBackgroundResource(mRootViewBackgroundResId);
 
         listView.setOnScrollListener(mOnScrollListener);
         return mContentContainer;
