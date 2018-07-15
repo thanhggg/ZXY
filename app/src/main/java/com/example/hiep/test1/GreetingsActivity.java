@@ -6,29 +6,39 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.hiep.test1.adapter.PopularSMSAdapter;
 import com.example.hiep.test1.db.ReadDB;
 import com.example.hiep.test1.db.SMSObject;
 import com.example.hiep.test1.function.UtilFuntion;
 import com.example.hiep.test1.lib.fadingactionbar.FadingActionBarHelper;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookDialog;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.util.ArrayList;
 
 public class GreetingsActivity extends ActivityBase {
 
     private int id_category = 0;
+    private CallbackManager callbackManager;
+    private ShareDialog shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_greetings);
-
         FadingActionBarHelper helper = new FadingActionBarHelper()
                 .rootViewBackground(UtilFuntion.getRandomBackground())
                 .actionBarBackground(R.drawable.actionbar_background)
@@ -40,6 +50,27 @@ public class GreetingsActivity extends ActivityBase {
         if (getActionBar() != null) {
             getActionBar().setIcon(R.drawable.ic_arrow_left);
         }
+
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(GreetingsActivity.this, "Có lỗi trong quá trình share, xin vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+                Log.d("share facebook",error.getMessage());
+            }
+        });
 
         getActionBar().setHomeButtonEnabled(true);
         ImageView iconImage = findViewById(android.R.id.home);
@@ -119,11 +150,14 @@ public class GreetingsActivity extends ActivityBase {
     }
 
     void createShareIntent(String sms) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, sms);
-        sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, "share"));
+
+        ShareHashtag shareHashtag = new ShareHashtag.Builder().setHashtag("hpny2019").build();
+        ShareContent shareContent = new ShareLinkContent.Builder()
+                .setShareHashtag(shareHashtag)
+                .setContentUrl(Uri.parse(sms))
+                .setQuote(sms)
+                .build();
+        shareDialog.show(shareContent);
     }
 
     void createSendSmsIntent(String sms) {
@@ -134,4 +168,9 @@ public class GreetingsActivity extends ActivityBase {
         startActivity(it);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }

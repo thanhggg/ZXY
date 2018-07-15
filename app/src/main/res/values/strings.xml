@@ -6,4 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_greetings">GreetingsActivity</string>
 
+    <string name="facebook_app_id">854714291393575</string>
+
 </resources>

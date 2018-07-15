@@ -2,10 +2,15 @@ package com.example.hiep.test1;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
+import android.util.Log;
 
 import com.example.hiep.test1.adapter.TabsPagerAdapter;
 import com.example.hiep.test1.animation.Constant;
@@ -13,6 +18,9 @@ import com.example.hiep.test1.animation.SwitchAnimationUtil;
 import com.example.hiep.test1.animation.SwitchAnimationUtil.AnimationType;
 import com.example.hiep.test1.fragment.CategoryFragment;
 import com.example.hiep.test1.function.UtilFuntion;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
@@ -41,6 +49,8 @@ public class MainActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.popup_right_in, R.anim.popup_left_out);
         setContentView(R.layout.activity_main);
+
+        printKeyHash(this);
 
         // Initilization
         viewPager = findViewById(R.id.pager);
@@ -72,7 +82,7 @@ public class MainActivity extends FragmentActivity implements
     }
 
     private AnimationType getRanDomType() {
-        AnimationType mAnimationType = null;
+        AnimationType mAnimationType;
         int radom = UtilFuntion.getRandomIndex(1, 8);
 
         if (radom == 1) {
@@ -118,8 +128,36 @@ public class MainActivity extends FragmentActivity implements
         super.onPause();
     }
 
-    /**
-     * Part of the activity's life cycle, StartAppAd should be integrated here
-     * for the back button exit ad integration.
-     */
+    public static String printKeyHash(Activity context) {
+        PackageInfo packageInfo;
+        String key = null;
+        try {
+            //getting application package name, as defined in manifest
+            String packageName = context.getApplicationContext().getPackageName();
+
+            //Retriving package info
+            packageInfo = context.getPackageManager().getPackageInfo(packageName,
+                    PackageManager.GET_SIGNATURES);
+
+            Log.e("Package Name=", context.getApplicationContext().getPackageName());
+
+            for (android.content.pm.Signature signature : packageInfo.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                key = new String(Base64.encode(md.digest(), 0));
+
+                // String key = new String(Base64.encodeBytes(md.digest()));
+                Log.e("Key Hash=", key);
+            }
+        } catch (PackageManager.NameNotFoundException e1) {
+            Log.e("Name not found", e1.toString());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("No such an algorithm", e.toString());
+        } catch (Exception e) {
+            Log.e("Exception", e.toString());
+        }
+
+        return key;
+    }
+
 }
