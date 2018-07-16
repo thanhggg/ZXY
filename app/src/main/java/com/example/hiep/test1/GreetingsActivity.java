@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,13 +19,17 @@ import com.example.hiep.test1.function.UtilFuntion;
 import com.example.hiep.test1.lib.fadingactionbar.FadingActionBarHelper;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
-import com.facebook.FacebookDialog;
 import com.facebook.FacebookException;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareContent;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
 import java.util.ArrayList;
 
@@ -51,26 +54,8 @@ public class GreetingsActivity extends ActivityBase {
             getActionBar().setIcon(R.drawable.ic_arrow_left);
         }
 
-        callbackManager = CallbackManager.Factory.create();
-        shareDialog = new ShareDialog(this);
-
-        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
-            @Override
-            public void onSuccess(Sharer.Result result) {
-
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(GreetingsActivity.this, "Có lỗi trong quá trình share, xin vui lòng thử lại!", Toast.LENGTH_SHORT).show();
-                Log.d("share facebook",error.getMessage());
-            }
-        });
+        setupFbShare();
+        setupAdMob();
 
         getActionBar().setHomeButtonEnabled(true);
         ImageView iconImage = findViewById(android.R.id.home);
@@ -141,6 +126,52 @@ public class GreetingsActivity extends ActivityBase {
             }
         });
 
+    }
+
+    private void setupAdMob() {
+
+        AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.admob_app_ad_id_test))
+                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+
+                        UnifiedNativeAd item = unifiedNativeAd;
+                    }
+                }).withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int i) {
+                        super.onAdFailedToLoad(i);
+                    }
+                }).withNativeAdOptions(new NativeAdOptions.Builder()
+                        .setImageOrientation(NativeAdOptions.ORIENTATION_PORTRAIT)
+                        .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_LEFT)
+                        .build())
+                .build();
+
+        adLoader.loadAds(new AdRequest.Builder().build(), 3);
+    }
+
+    private void setupFbShare() {
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(GreetingsActivity.this, "Có lỗi trong quá trình share, xin vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+                Log.d("share facebook", error.getMessage());
+            }
+        });
     }
 
     @Override
