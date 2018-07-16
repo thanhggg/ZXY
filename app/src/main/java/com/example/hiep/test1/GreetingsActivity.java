@@ -1,6 +1,7 @@
 package com.example.hiep.test1;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.hiep.test1.adapter.PopularSMSAdapter;
@@ -28,6 +30,7 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.VideoOptions;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
@@ -38,6 +41,15 @@ public class GreetingsActivity extends ActivityBase {
     private int id_category = 0;
     private CallbackManager callbackManager;
     private ShareDialog shareDialog;
+
+    private ArrayList<Object> mLisSms;
+    private ListView listGreet;
+    private PopularSMSAdapter adapter;
+
+    private int adNum = 0;
+
+    private ProgressBar mDialog;
+    private Dialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +65,10 @@ public class GreetingsActivity extends ActivityBase {
         if (getActionBar() != null) {
             getActionBar().setIcon(R.drawable.ic_arrow_left);
         }
-
-        setupFbShare();
-        setupAdMob();
+        mDialog = new ProgressBar(this);
+        mProgressDialog = new Dialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setContentView(mDialog);
 
         getActionBar().setHomeButtonEnabled(true);
         ImageView iconImage = findViewById(android.R.id.home);
@@ -93,8 +106,8 @@ public class GreetingsActivity extends ActivityBase {
         } catch (Exception ignored) {
 
         }
-        ArrayList<SMSObject> mLisSms;
-        mLisSms = mReadDB.getlistSMSObject(id_category);
+        mLisSms = new ArrayList<>();
+        mLisSms.addAll(mReadDB.getlistSMSObject(id_category));
         getActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>" + mReadDB.getTitleCates(id_category) + ""));
         mReadDB.close();
 
@@ -102,9 +115,9 @@ public class GreetingsActivity extends ActivityBase {
         int imgDrawerble = getResources().getIdentifier(mStringImg, "drawable", getPackageName());
         image_header.setImageResource(imgDrawerble);
 
-        ListView listGreet = findViewById(android.R.id.list);
-        PopularSMSAdapter adapter = new PopularSMSAdapter(GreetingsActivity.this, R.layout.item_list_sms, mLisSms);
-        listGreet.setAdapter(adapter);
+        listGreet = findViewById(android.R.id.list);
+        adapter = new PopularSMSAdapter(GreetingsActivity.this, R.layout.item_list_sms, mLisSms);
+
 
         adapter.setListener(new PopularSMSAdapter.OnItemClickListener() {
             @Override
@@ -126,29 +139,45 @@ public class GreetingsActivity extends ActivityBase {
             }
         });
 
+        listGreet.setAdapter(adapter);
+
+        setupFbShare();
+        setupAdMob();
+
     }
 
     private void setupAdMob() {
-
+        mProgressDialog.show();
         AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.admob_app_ad_id_test))
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        adNum++;
+                        int lastPos = listGreet.getLastVisiblePosition();
+                        if (adNum * 3 <= mLisSms.size() - 1 - lastPos) {
+                            mLisSms.add(lastPos + 4 * adNum, unifiedNativeAd);
+                        }
 
-                        UnifiedNativeAd item = unifiedNativeAd;
+                        if (adNum >= mLisSms.size() / 5) {
+                            adapter.notifyDataSetChanged();
+                            mProgressDialog.dismiss();
+                        }
+
                     }
                 }).withAdListener(new AdListener() {
                     @Override
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
+                        mProgressDialog.dismiss();
                     }
                 }).withNativeAdOptions(new NativeAdOptions.Builder()
+                        .setVideoOptions(new VideoOptions.Builder().setStartMuted(true).build())
                         .setImageOrientation(NativeAdOptions.ORIENTATION_PORTRAIT)
                         .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_LEFT)
                         .build())
                 .build();
 
-        adLoader.loadAds(new AdRequest.Builder().build(), 3);
+        adLoader.loadAds(new AdRequest.Builder().build(), mLisSms.size() / 5);
     }
 
     private void setupFbShare() {
