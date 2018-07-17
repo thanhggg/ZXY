@@ -7,10 +7,15 @@ import android.app.FragmentTransaction;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.example.hiep.test1.adapter.TabsPagerAdapter;
 import com.example.hiep.test1.animation.Constant;
@@ -18,6 +23,8 @@ import com.example.hiep.test1.animation.SwitchAnimationUtil;
 import com.example.hiep.test1.animation.SwitchAnimationUtil.AnimationType;
 import com.example.hiep.test1.fragment.CategoryFragment;
 import com.example.hiep.test1.function.UtilFuntion;
+import com.example.hiep.test1.system.ZXYApplication;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -29,11 +36,17 @@ public class MainActivity extends FragmentActivity implements
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
 
+    private int transitionCount = 0;
+
+    private InterstitialAd interstitialAd;
+    private com.google.android.gms.ads.reward.RewardedVideoAd rewardedVideoAd;
+
+    private ImageView giftIcon;
 
     // Tab titles
-    private int[] tabs = {R.drawable.ic_home, R.drawable.ic_heart};
 
     private SwitchAnimationUtil mSwitchAnimationUtil;
+
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -57,6 +70,11 @@ public class MainActivity extends FragmentActivity implements
         actionBar = getActionBar();
         mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 
+        interstitialAd = ZXYApplication.getInstance().getInterstitialAd();
+        rewardedVideoAd = ZXYApplication.getInstance().getRewardedVideoAd();
+
+        setupGiftIcon();
+
         viewPager.setAdapter(mAdapter);
 
         actionBar.hide();
@@ -64,6 +82,54 @@ public class MainActivity extends FragmentActivity implements
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 
+    }
+
+    private void setupGiftIcon() {
+        giftIcon = findViewById(R.id.iv_gift_icon);
+        giftIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                transitionCount--;
+                rewardedVideoAd.show();
+            }
+        });
+
+        final Animation shakeAnim = AnimationUtils.loadAnimation(this, R.anim.shake_anim);
+        shakeAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        giftIcon.startAnimation(shakeAnim);
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        giftIcon.startAnimation(shakeAnim);
+        ZXYApplication.getInstance().setListener(new ZXYApplication.OnAdLoadListener() {
+            @Override
+            public void onAdLoaded() {
+                if (rewardedVideoAd == null || !rewardedVideoAd.isLoaded()) {
+                    giftIcon.setVisibility(View.GONE);
+                } else {
+                    giftIcon.setVisibility(View.VISIBLE);
+                    giftIcon.clearAnimation();
+                    giftIcon.startAnimation(shakeAnim);
+                }
+            }
+        });
     }
 
     @Override
@@ -116,7 +182,14 @@ public class MainActivity extends FragmentActivity implements
      */
     @Override
     public void onResume() {
+        transitionCount++;
+        if (transitionCount % 4 == 0) {
+            if (interstitialAd.isLoaded()) {
+                interstitialAd.show();
+            }
+        }
         super.onResume();
+
     }
 
     /**

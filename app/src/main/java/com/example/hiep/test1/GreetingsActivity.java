@@ -1,7 +1,6 @@
 package com.example.hiep.test1;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,17 +10,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.hiep.test1.adapter.PopularSMSAdapter;
 import com.example.hiep.test1.db.ReadDB;
-import com.example.hiep.test1.db.SMSObject;
 import com.example.hiep.test1.function.UtilFuntion;
 import com.example.hiep.test1.lib.fadingactionbar.FadingActionBarHelper;
+import com.example.hiep.test1.system.ZXYApplication;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.ads.RewardedVideoAd;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareContent;
 import com.facebook.share.model.ShareHashtag;
@@ -48,8 +47,7 @@ public class GreetingsActivity extends ActivityBase {
 
     private int adNum = 0;
 
-    private ProgressBar mDialog;
-    private Dialog mProgressDialog;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +63,9 @@ public class GreetingsActivity extends ActivityBase {
         if (getActionBar() != null) {
             getActionBar().setIcon(R.drawable.ic_arrow_left);
         }
-        mDialog = new ProgressBar(this);
-        mProgressDialog = new Dialog(this);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setContentView(mDialog);
+
+        mProgressDialog = new ProgressDialog(this);
+
 
         getActionBar().setHomeButtonEnabled(true);
         ImageView iconImage = findViewById(android.R.id.home);
@@ -147,20 +144,18 @@ public class GreetingsActivity extends ActivityBase {
     }
 
     private void setupAdMob() {
-        mProgressDialog.show();
         AdLoader adLoader = new AdLoader.Builder(this, getString(R.string.admob_app_ad_id_test))
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
                         adNum++;
                         int lastPos = listGreet.getLastVisiblePosition();
-                        if (adNum * 3 <= mLisSms.size() - 1 - lastPos) {
-                            mLisSms.add(lastPos + 4 * adNum, unifiedNativeAd);
+                        if (lastPos + 5 * adNum <= mLisSms.size() - 1) {
+                            mLisSms.add(lastPos + 5 * adNum, unifiedNativeAd);
                         }
 
-                        if (adNum >= mLisSms.size() / 5) {
+                        if (adNum >= mLisSms.size() / 4) {
                             adapter.notifyDataSetChanged();
-                            mProgressDialog.dismiss();
                         }
 
                     }
@@ -168,16 +163,15 @@ public class GreetingsActivity extends ActivityBase {
                     @Override
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
-                        mProgressDialog.dismiss();
                     }
                 }).withNativeAdOptions(new NativeAdOptions.Builder()
                         .setVideoOptions(new VideoOptions.Builder().setStartMuted(true).build())
                         .setImageOrientation(NativeAdOptions.ORIENTATION_PORTRAIT)
-                        .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_LEFT)
+                        .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
                         .build())
                 .build();
 
-        adLoader.loadAds(new AdRequest.Builder().build(), mLisSms.size() / 5);
+        adLoader.loadAds(new AdRequest.Builder().build(), mLisSms.size() / 4);
     }
 
     private void setupFbShare() {
