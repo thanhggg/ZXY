@@ -86,7 +86,7 @@ public class ZXYApplication extends Application {
                 new AdRequest.Builder().build());
 
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.admob_app_ad_id));
+        interstitialAd.setAdUnitId(getString(R.string.admob_app_intertitial_ads_id));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener() {
