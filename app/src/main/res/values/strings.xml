@@ -6,7 +6,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_greetings">GreetingsActivity</string>
     <string name="admob_app_id">ca-app-pub-5173360461129251~3129980438</string>
-    <string name="admob_app_ad_id">ca-app-pub-5173360461129251/7732829604</string>
+    <string name="admob_app_ad_id">ca-app-pub-5173360461129251/5541317518</string>
+    <string name="admob_app_reward_ad_id">ca-app-pub-5173360461129251/7134025815</string>
+    <string name="admob_app_interstitial_ad_id">ca-app-pub-5173360461129251/7158076547</string>
     <string name="admob_app_ad_id_test">ca-app-pub-3940256099942544/2247696110</string>
 
     <string name="facebook_app_id">854714291393575</string>

@@ -117,19 +117,23 @@ public class MainActivity extends FragmentActivity implements
             }
         });
 
-        giftIcon.startAnimation(shakeAnim);
+        setupBtnGift(shakeAnim);
         ZXYApplication.getInstance().setListener(new ZXYApplication.OnAdLoadListener() {
             @Override
             public void onAdLoaded() {
-                if (rewardedVideoAd == null || !rewardedVideoAd.isLoaded()) {
-                    giftIcon.setVisibility(View.GONE);
-                } else {
-                    giftIcon.setVisibility(View.VISIBLE);
-                    giftIcon.clearAnimation();
-                    giftIcon.startAnimation(shakeAnim);
-                }
+                setupBtnGift(shakeAnim);
             }
         });
+    }
+
+    private void setupBtnGift(Animation animation) {
+        if (rewardedVideoAd == null || !rewardedVideoAd.isLoaded()) {
+            giftIcon.setVisibility(View.GONE);
+        } else {
+            giftIcon.setVisibility(View.VISIBLE);
+            giftIcon.clearAnimation();
+            giftIcon.startAnimation(animation);
+        }
     }
 
     @Override
