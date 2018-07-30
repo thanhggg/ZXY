@@ -158,9 +158,6 @@ public class FadingActionBarHelper {
             mActionBarBackgroundDrawable = activity.getResources().getDrawable(mActionBarBackgroundResId);
         }
         mActionBar.setBackgroundDrawable(mActionBarBackgroundDrawable);
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-            mActionBarBackgroundDrawable.setCallback(mDrawableCallback);
-        }
         mActionBarBackgroundDrawable.setAlpha(0);
     }
 
@@ -293,6 +290,11 @@ public class FadingActionBarHelper {
             mListViewBackgroundView.setLayoutParams(params2);
         }
         mLastHeaderHeight = headerHeight;
+    }
+
+    public void updateHeaderHeigtWithAds(int adsHeight) {
+        mLastHeaderHeight-= adsHeight;
+        updateHeaderHeight(mLastHeaderHeight);
     }
 
     private void initializeGradient(ViewGroup headerContainer) {
