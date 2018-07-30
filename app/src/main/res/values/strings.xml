@@ -5,10 +5,10 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_greetings">GreetingsActivity</string>
-    <string name="admob_app_id">ca-app-pub-4188190588662055~7269668860</string>
-    <string name="admob_app_ad_id">ca-app-pub-4188190588662055/6400791391</string>
-    <string name="admob_app_intertitial_ads_id">ca-app-pub-4188190588662055/9909216597</string>
-    <string name="admob_app_banner_ads_id">ca-app-pub-4188190588662055/8093147018</string>
+    <string name="admob_app_id">ca-app-pub-5160403940251656~6180852437</string>
+    <string name="admob_app_ad_id">ca-app-pub-5160403940251656/8408911594</string>
+    <string name="admob_app_intertitial_ads_id">ca-app-pub-5160403940251656/1211704589</string>
+    <string name="admob_app_banner_ads_id">ca-app-pub-5160403940251656/4073563848</string>
 
     <string name="facebook_app_id">854714291393575</string>
     <string name="admob_app_ad_id_test">ca-app-pub-3940256099942544/6300978111</string>
