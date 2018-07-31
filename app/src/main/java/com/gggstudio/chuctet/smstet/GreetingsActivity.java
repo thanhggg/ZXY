@@ -166,16 +166,12 @@ public class GreetingsActivity extends ActivityBase {
             public void onAdLoaded() {
                 super.onAdLoaded();
                 mAdView.setVisibility(View.VISIBLE);
-                helper.updateHeaderHeigtWithAds(mAdView.getHeight());
-                listGreet.setEnabled(true);
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                helper.updateHeaderHeigtWithAds(-mAdView.getHeight());
                 mAdView.setVisibility(View.GONE);
-                listGreet.setEnabled(true);
             }
 
             @Override
@@ -185,9 +181,6 @@ public class GreetingsActivity extends ActivityBase {
             }
         });
         mAdView.loadAd(adRequest);
-        if (mAdView.isLoading()) {
-            listGreet.setEnabled(false);
-        }
     }
 
     @Override
@@ -201,7 +194,7 @@ public class GreetingsActivity extends ActivityBase {
         ShareHashtag shareHashtag = new ShareHashtag.Builder().setHashtag("hpny2019").build();
         ShareContent shareContent = new ShareLinkContent.Builder()
                 .setShareHashtag(shareHashtag)
-                .setContentUrl(Uri.parse(sms))
+                .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.gggstudio.chuctet.smstet"))
                 .setQuote(sms)
                 .build();
         shareDialog.show(shareContent);

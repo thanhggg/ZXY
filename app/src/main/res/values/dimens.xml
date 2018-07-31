@@ -5,5 +5,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="app_height_20">20dp</dimen>
+    <dimen name="app_height_50">50dp</dimen>
 
 </resources>
