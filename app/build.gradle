@@ -6,8 +6,8 @@ android {
         applicationId "com.gggstudio.chuctet.smstet"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 11
-        versionName "1.1"
+        versionCode 13
+        versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

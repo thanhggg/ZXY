@@ -7,7 +7,7 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/app_height_50"
+        android:layout_above="@+id/adView"
         tools:context="${relativePackage}.${activityClass}" />
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/admob_app_banner_ads_id" />
 
